@@ -28,7 +28,7 @@ A powerful AI-driven financial analysis tool that leverages Google's Gemini LLM 
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/benAJoseph/LLM-based-Financial-AI-Agent.git
    cd LLM-based-Financial-AI-Agent
    ```
 

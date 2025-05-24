@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial AI Agent</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+
+        .upload-section, .query-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .upload-area {
+            border: 3px dashed #007bff;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            background: white;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: #0056b3;
+            background: #f8f9ff;
+        }
+
+        .upload-area.dragover {
+            border-color: #28a745;
+            background: #f8fff8;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .upload-btn {
+            background: #007bff;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background 0.3s ease;
+        }
+
+        .upload-btn:hover {
+            background: #0056b3;
+        }
+
+        .query-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 1em;
+            margin-bottom: 15px;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .query-input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .query-btn {
+            background: #28a745;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            width: 100%;
+            transition: background 0.3s ease;
+        }
+
+        .query-btn:hover {
+            background: #218838;
+        }
+
+        .query-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .results-section {
+            grid-column: 1 / -1;
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            margin-top: 20px;
+        }
+
+        .result-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #007bff;
+        }
+
+        .result-query {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .result-response {
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .sample-queries {
+            margin-top: 15px;
+        }
+
+        .sample-query {
+            background: #e9ecef;
+            padding: 8px 12px;
+            border-radius: 5px;
+            margin: 5px 0;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .sample-query:hover {
+            background: #dee2e6;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #007bff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💰 Financial AI Agent</h1>
+            <p>Upload your financial data and get AI-powered insights</p>
+        </div>
+
+        <div class="main-content">
+            <div class="upload-section">
+                <h2 class="section-title">📁 Upload Financial Data</h2>
+                <div class="upload-area" id="uploadArea">
+                    <div>📊</div>
+                    <h3>Drop your CSV or Excel file here</h3>
+                    <p>or click to browse</p>
+                    <button class="upload-btn" onclick="document.getElementById('fileInput').click()">Choose File</button>
+                    <input type="file" id="fileInput" class="file-input" accept=".csv,.xlsx,.xls">
+                </div>
+                <div id="uploadStatus"></div>
+            </div>
+
+            <div class="query-section">
+                <h2 class="section-title">🤖 Ask Questions</h2>
+                <textarea 
+                    id="queryInput" 
+                    class="query-input" 
+                    placeholder="Ask about your financial data...\n\nExamples:\n• What are my top expenses?\n• How much did I spend on groceries?\n• Show me my monthly trends\n• What's my budget breakdown?"
+                    disabled
+                ></textarea>
+                <button id="queryBtn" class="query-btn" disabled>Ask AI Agent</button>
+                
+                <div class="sample-queries">
+                    <h4>💡 Sample Questions:</h4>
+                    <div class="sample-query" onclick="setQuery('What are my top 5 expenses?')">What are my top 5 expenses?</div>
+                    <div class="sample-query" onclick="setQuery('How much did I spend on groceries?')">How much did I spend on groceries?</div>
+                    <div class="sample-query" onclick="setQuery('What\'s my monthly spending trend?')">What's my monthly spending trend?</div>
+                    <div class="sample-query" onclick="setQuery('Show me my budget breakdown')">Show me my budget breakdown</div>
+                    <div class="sample-query" onclick="setQuery('What\'s my total income vs expenses?')">What's my total income vs expenses?</div>
+                </div>
+            </div>
+
+            <div class="results-section">
+                <h2 class="section-title">📈 AI Insights</h2>
+                <div id="loadingDiv" class="loading">
+                    <div class="spinner"></div>
+                    <p>AI is analyzing your data...</p>
+                </div>
+                <div id="resultsContainer">
+                    <p style="text-align: center; color: #6c757d; font-style: italic;">Upload your financial data and ask questions to see AI insights here.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000';
+        let currentSessionId = 'web_session_' + Date.now();
+        let dataUploaded = false;
+
+        // File upload handling
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const uploadStatus = document.getElementById('uploadStatus');
+        const queryInput = document.getElementById('queryInput');
+        const queryBtn = document.getElementById('queryBtn');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const loadingDiv = document.getElementById('loadingDiv');
+
+        // Drag and drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFileUpload(files[0]);
+            }
+        });
+
+        /**uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });**/
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFileUpload(e.target.files[0]);
+            }
+        });
+
+        // File upload function
+        async function handleFileUpload(file) {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('session_id', currentSessionId);
+
+            showStatus('Uploading and processing file...', 'info');
+
+            try {
+                const response = await fetch(`${API_BASE}/upload`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showStatus(`✅ File uploaded successfully! Processed ${result.rows_processed} rows.`, 'success');
+                    dataUploaded = true;
+                    queryInput.disabled = false;
+                    queryBtn.disabled = false;
+                    queryInput.placeholder = 'Ask about your financial data...';
+                } else {
+                    showStatus(`❌ Upload failed: ${result.detail}`, 'error');
+                }
+            } catch (error) {
+                showStatus(`❌ Upload error: ${error.message}`, 'error');
+            }
+        }
+
+        // Query handling
+        queryBtn.addEventListener('click', async () => {
+            const query = queryInput.value.trim();
+            if (!query) {
+                alert('Please enter a question!');
+                return;
+            }
+
+            await askQuestion(query);
+        });
+
+        queryInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                queryBtn.click();
+            }
+        });
+
+        // Ask question function
+        async function askQuestion(query) {
+            if (!dataUploaded) {
+                alert('Please upload financial data first!');
+                return;
+            }
+
+            loadingDiv.style.display = 'block';
+            queryBtn.disabled = true;
+
+            try {
+                const response = await fetch(`${API_BASE}/query`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        prompt: query,
+                        session_id: currentSessionId
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    displayResult(query, result.response);
+                } else {
+                    displayResult(query, `❌ Error: ${result.detail}`);
+                }
+            } catch (error) {
+                displayResult(query, `❌ Network error: ${error.message}`);
+            } finally {
+                loadingDiv.style.display = 'none';
+                queryBtn.disabled = false;
+            }
+        }
+
+        // Display result function
+        function displayResult(query, response) {
+            const resultItem = document.createElement('div');
+            resultItem.className = 'result-item';
+
+            const queryDiv = document.createElement('div');
+            queryDiv.className = 'result-query';
+            queryDiv.textContent = `❓ ${query}`;
+
+            const responseDiv = document.createElement('div');
+            responseDiv.className = 'result-response';
+            responseDiv.innerHTML = marked.parse(response); // ✅ Convert markdown to HTML
+
+            resultItem.appendChild(queryDiv);
+            resultItem.appendChild(responseDiv);
+
+            if (resultsContainer.children.length === 1 && resultsContainer.children[0].tagName === 'P') {
+                resultsContainer.innerHTML = '';
+            }
+
+            resultsContainer.insertBefore(resultItem, resultsContainer.firstChild);
+        }
+
+
+        // Show status function
+        function showStatus(message, type) {
+            uploadStatus.innerHTML = `<div class="status ${type}">${message}</div>`;
+            setTimeout(() => {
+                if (type !== 'success') {
+                    uploadStatus.innerHTML = '';
+                }
+            }, 5000);
+        }
+
+        // Set query function
+        function setQuery(query) {
+            if (!dataUploaded) {
+                alert('Please upload financial data first!');
+                return;
+            }
+            queryInput.value = query;
+            queryInput.focus();
+        }
+
+        // Check server status on load
+        window.addEventListener('load', async () => {
+            try {
+                const response = await fetch(`${API_BASE}/`);
+                if (response.ok) {
+                    console.log('✅ Server is running');
+                } else {
+                    showStatus('⚠️ Server connection issue. Make sure the API is running on localhost:8000', 'error');
+                }
+            } catch (error) {
+                showStatus('❌ Cannot connect to server. Please start the API server first: python main.py', 'error');
+            }
+        });
+    </script>
+</body>
+</html>

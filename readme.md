@@ -15,7 +15,22 @@ A powerful AI-driven financial analysis tool that leverages Google's Gemini LLM 
 - **Real-time Processing**: Fast file processing and instant AI responses
 - **Session Management**: Secure session-based data handling
 
+## Screenshots
 
+### Web Interface
+![Frontend Interface](static/frontend.png)
+*Web interface for uploading data and querying insights*
+
+### API Documentation
+![Swagger UI](static/swaggerUI.png)
+*API documentation with Swagger UI*
+
+![ReDoc UI](static/redocUI.png)
+*Alternative API documentation with ReDoc*
+
+### AI Chat Results
+![Chat Results](static/chat%20results.png)
+*Sample AI-powered financial insights and analysis*
 ## Quick Start
 
 ### Prerequisites

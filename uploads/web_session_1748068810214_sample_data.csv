@@ -1,0 +1,38 @@
+date,amount,category,description
+2024-01-01,2500.00,Salary,Monthly Salary
+2024-01-02,-45.50,Groceries,Supermarket Shopping
+2024-01-03,-12.99,Entertainment,Netflix Subscription
+2024-01-05,-850.00,Rent,Monthly Rent Payment
+2024-01-07,-25.00,Transportation,Gas Station
+2024-01-10,-67.89,Groceries,Weekly Shopping
+2024-01-12,-15.00,Entertainment,Movie Tickets
+2024-01-15,-200.00,Utilities,Electricity Bill
+2024-01-18,-89.99,Shopping,Clothing Purchase
+2024-01-20,-35.75,Dining,Restaurant Dinner
+2024-01-22,-120.00,Healthcare,Doctor Visit
+2024-01-25,-55.30,Groceries,Grocery Store
+2024-01-28,-40.00,Transportation,Public Transport
+2024-02-01,2500.00,Salary,Monthly Salary
+2024-02-03,-48.75,Groceries,Supermarket Shopping
+2024-02-05,-850.00,Rent,Monthly Rent Payment
+2024-02-08,-30.00,Transportation,Gas Station
+2024-02-10,-75.50,Groceries,Weekly Shopping
+2024-02-12,-25.00,Entertainment,Concert Tickets
+2024-02-15,-180.00,Utilities,Gas Bill
+2024-02-18,-150.00,Shopping,Electronics
+2024-02-20,-42.30,Dining,Lunch Out
+2024-02-22,-95.00,Healthcare,Pharmacy
+2024-02-25,-62.80,Groceries,Grocery Store
+2024-02-28,-35.00,Transportation,Taxi Ride
+2024-03-01,2500.00,Salary,Monthly Salary
+2024-03-03,-52.25,Groceries,Supermarket Shopping
+2024-03-05,-850.00,Rent,Monthly Rent Payment
+2024-03-08,-28.50,Transportation,Gas Station
+2024-03-10,-82.75,Groceries,Weekly Shopping
+2024-03-12,-18.99,Entertainment,Streaming Service
+2024-03-15,-220.00,Utilities,Internet Bill
+2024-03-18,-125.00,Shopping,Home Supplies
+2024-03-20,-38.90,Dining,Coffee Shop
+2024-03-22,-110.00,Healthcare,Dental Checkup
+2024-03-25,-58.60,Groceries,Grocery Store
+2024-03-28,-45.00,Transportation,Car Maintenance
